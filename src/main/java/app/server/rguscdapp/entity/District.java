@@ -1,13 +1,33 @@
-package app.server.rguscdapp;
+package app.server.rguscdapp.entity;
 
 import java.util.Collection;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+
+@Data //build getter and setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
 public class District {
-    private Collection<Precinct> precincts;
-    private String[] incumbents;
-    private double[][] geoData;
-    private double area;
+    @Id
+    @GeneratedValue
     private int id;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "districting_id", nullable = false)
+    private Districting districting;
+
+    private int number;
+    //private Collection<Precinct> precincts;
+    @Transient
+    private String[] incumbents;
+    //private double[][] geoData; we can get this from Districting database
+    private double area;
+
     private int sumPopulation;
     private int sumPopulationBlack;
     private int sumPopulationHispanic;

@@ -1,5 +1,9 @@
-package app.server.rguscdapp;
+package app.server.rguscdapp.entity;
 
+
+import app.server.rguscdapp.*;
+import app.server.rguscdapp.entity.Districting;
+import app.server.rguscdapp.entity.State;
 
 import java.util.Collection;
 import java.util.List;

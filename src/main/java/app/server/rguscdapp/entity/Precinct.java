@@ -1,4 +1,4 @@
-package app.server.rguscdapp;
+package app.server.rguscdapp.entity;
 
 public class Precinct {
     private String precinctIdentifier;
