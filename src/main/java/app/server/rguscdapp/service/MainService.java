@@ -31,10 +31,7 @@ public class MainService {
         return weightRepository.save(weight);
     }
 
-    public int setConstraints(Long jobId, Constraint constraint){
-        return 1;
-
-    }
+   
 
     public String loadIncumbents(){
 
