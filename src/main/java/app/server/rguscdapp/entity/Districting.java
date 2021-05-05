@@ -28,6 +28,7 @@ public class Districting {
     private String geoData;//path of geojson file
     private double objectiveScore;
     private int numMajMinDistricts;
+    private double popEqualityDifference;
     private double compactnessFatness;
     private double compactnessGraph;
     private double compactnessPolsby;
@@ -35,12 +36,17 @@ public class Districting {
     private double splitCountyScore;
     private double efficiencyGap;
 
+
     @Transient
     private double[] boxAndWhiskerArray;
 
     private double deviationFromAverage;
-
+    private double deviationFromEnactedArea;
+    private double deviationFromEnactedPop;
     @Transient
-    private String[][] conflictingIncumbents;
+    private boolean conflictingIncumbents;
 
+    public boolean getConflictingIncumbents() {
+        return conflictingIncumbents;
+    }
 }

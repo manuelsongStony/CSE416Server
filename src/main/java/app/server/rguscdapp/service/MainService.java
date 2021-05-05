@@ -1,6 +1,5 @@
 package app.server.rguscdapp.service;
 
-import app.server.rguscdapp.Constraint;
 import app.server.rguscdapp.entity.Weight;
 import app.server.rguscdapp.entity.State;
 
