@@ -14,12 +14,16 @@ import java.util.Collection;
 @Entity
 public class Districting {
     @Id
-    @GeneratedValue
-    private int DistrictingId;
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private int districtingId;
 
     @OneToMany(mappedBy = "districting", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     private Collection<District> districts;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "job_id", nullable = false)
+    private Job job;
 
     private String geoData;//path of geojson file
     private double objectiveScore;
@@ -38,21 +42,5 @@ public class Districting {
 
     @Transient
     private String[][] conflictingIncumbents;
-    //private String[][] conflictingIncumbents;
-    //private SplitCounty[] splitCounties;
 
-    /*
-    + createBoxAndWhiskerArray(minority: Minority): double[]
-    + isIncumbentProtected(incumbent: String): boolean
-    + deviationFromAverage(avg: AverageDistricting): double
-    + deviationFromEnacted(enacted: Districting): double
-    + calcObjectiveScore(weights: double[]): double
-    + toGillConstruct(): void
-    + getSummary(): JSON
-    + toJSON(): JSON
-    +setboxAndWhiskerArray();void
-    +setCharacteristic():void
-    +setDeviationFromAverage():void
-    +setMeasures():void
-     */
 }

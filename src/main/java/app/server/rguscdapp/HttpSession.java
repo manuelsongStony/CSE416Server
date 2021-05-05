@@ -2,6 +2,7 @@ package app.server.rguscdapp;
 
 import app.server.rguscdapp.entity.Districting;
 import app.server.rguscdapp.entity.Job;
+import app.server.rguscdapp.enums.Minority;
 
 public class HttpSession {
 

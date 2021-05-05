@@ -4,9 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Collection;
 
 @Data
 @AllArgsConstructor
@@ -14,8 +13,13 @@ import javax.persistence.Id;
 @Entity
 public class State {
     @Id
-    @GeneratedValue
-    private int id;
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    private int stateId;
+
+    @OneToMany(mappedBy = "state", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    private Collection<Job> jobs;
+
     private String stateName;
     private int totalPopulation;
     private int totalBlackPopulation;

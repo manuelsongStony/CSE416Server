@@ -14,8 +14,8 @@ import javax.persistence.*;
 @Entity
 public class District {
     @Id
-    @GeneratedValue
-    private int id;
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private int districtId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "districting_id", nullable = false)

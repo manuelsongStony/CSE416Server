@@ -1,4 +1,4 @@
-package app.server.rguscdapp;
+package app.server.rguscdapp.enums;
 
 public enum Minority {
 
