@@ -48,6 +48,9 @@ public class JobService {
         existingJob.setPopConstraint(job.getPopConstraint());
 
         existingJob.setIncumbents(job.getIncumbents());
+
+        existingJob.applyConstraints();
+
         return jobRepository.save(existingJob);
     }
 

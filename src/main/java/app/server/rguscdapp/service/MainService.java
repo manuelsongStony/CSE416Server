@@ -31,7 +31,7 @@ public class MainService {
         return weightRepository.save(weight);
     }
 
-   
+
 
     public String loadIncumbents(){
 

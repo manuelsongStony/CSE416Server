@@ -1,5 +1,7 @@
 package app.server.rguscdapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +18,8 @@ public class State {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int stateId;
 
+    @JsonManagedReference
+    //@JsonBackReference
     @OneToMany(mappedBy = "state", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     private Collection<Job> jobs;

@@ -16,7 +16,7 @@ public class JobController {
     @Autowired
     private JobService jobService;
 
-    @PostMapping("/addJob")
+    @PostMapping("/addJob") //http://localhost:8080/job/addJob
     public Job addJob(@RequestBody Job job){
         return jobService.saveJob(job);
     }
@@ -41,7 +41,7 @@ public class JobController {
         return jobService.deleteJob(id);
     }
 
-    @PutMapping("/update")
+    @PutMapping("/applyConstraints")// /update
     public Job updateJob(@RequestBody Job job){
         return jobService.updateJob(job);
     }

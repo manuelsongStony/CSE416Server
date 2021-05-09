@@ -12,6 +12,8 @@ import app.server.rguscdapp.enums.Minority;
 import app.server.rguscdapp.enums.PopulationType;
 import app.server.rguscdapp.enums.Summary;
 import app.server.rguscdapp.sorting.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,8 +36,10 @@ public class Job {
     private Collection<Districting> districtings;
 
     @Transient
-    private Collection<Districting> ctDistrictings;
+    private List<Districting> ctDistrictings;
 
+    @JsonBackReference
+    //@JsonManagedReference
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "state_id", nullable = false)
     private State state;
@@ -50,6 +54,7 @@ public class Job {
             cascade = CascadeType.ALL)
     private Collection<Incumbent> incumbents;
 
+    private int numberOfDistricts;
     private int minMajorityMinorityDistricts;
     private double mincompactness;
     private CompactnessType compactnessType;
@@ -63,7 +68,7 @@ public class Job {
     @Transient
     private Districting averageDistricting;
     @Transient
-    private List<boxAndWhisker> boxAndWhiskerData;
+    private ArrayList<double[]> boxAndWhiskerArray;
 
 
     public Collection<Districting> applyConstraints(){
@@ -172,6 +177,70 @@ public class Job {
 
 
     }
+
+    public void creatBoxAndWhiskerArray(Minority minority){
+
+        for (int i = 0; i < ctDistrictings.size(); i++) {
+            ctDistrictings.get(i).createBoxAndWhiskerData(minority);
+        }
+
+
+        for(int i=0; i<numberOfDistricts;i++) {
+            double[] boxAndWhiskerStat =new double[6];
+
+            List<Double> temp= new ArrayList<>();
+
+            for (int j = 0; j < ctDistrictings.size(); j++) {
+                temp.add(ctDistrictings.get(j).getBoxAndWhiskerData().get(i));
+            }
+            boxAndWhiskerStat[0]=percentile(temp,0);
+            boxAndWhiskerStat[1]=percentile(temp,25);
+            boxAndWhiskerStat[2]=percentile(temp,50);
+            boxAndWhiskerStat[3]=percentile(temp,75);
+            boxAndWhiskerStat[4]=percentile(temp,100);
+            boxAndWhiskerStat[5]=average(temp);
+
+        }
+    }
+    public  double percentile(List<Double> data, double percentile) {
+        Collections.sort(data);
+        int index = (int) Math.ceil(percentile / 100.0 * data.size());
+        return data.get(index-1);
+    }
+    public  double average(List<Double> data) {
+        double sum=0;
+        for(int i=0; i<data.size();i++){
+            sum+=data.get(i);
+        }
+        return sum/data.size();
+    }
+
+
+    public void pickAverageDistricting(){
+        calculateBoxAndWhiskerScore();
+        int id=0;
+        for (int i = 0; i < ctDistrictings.size(); i++) {
+            if (ctDistrictings.get(i).getBoxAndWhiskerScore()<ctDistrictings.get(id).getBoxAndWhiskerScore()){
+                id=i;
+            }
+
+        }
+        averageDistricting=ctDistrictings.get(id);
+    }
+
+    public void calculateBoxAndWhiskerScore(){
+        for (int i = 0; i < ctDistrictings.size(); i++) {
+            double sum=0;
+            for(int j = 0; j < numberOfDistricts; j++){
+
+               sum+= Math.abs(ctDistrictings.get(i).getBoxAndWhiskerData().get(j)-boxAndWhiskerArray.get(j)[5]);
+            }
+
+            ctDistrictings.get(i).setBoxAndWhiskerScore(sum);
+        }
+    }
+
+
 
     /*
     + : Job

@@ -34,7 +34,7 @@ public class MainController {
     }
 
 
-    @GetMapping(path= "incumbents")//http://localhost:8080/api/v1/rguscdapp/incumbents
+    @GetMapping(path= "incumbents")//http://localhost:8080/incumbents
     public String loadIncumbents(){
 
         return mainService.loadIncumbents();
