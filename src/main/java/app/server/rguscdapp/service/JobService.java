@@ -2,8 +2,10 @@ package app.server.rguscdapp.service;
 
 
 import app.server.rguscdapp.entity.Job;
+import app.server.rguscdapp.entity.JobSummary;
 import app.server.rguscdapp.repository.JobRepository;
 
+import app.server.rguscdapp.repository.JobSummaryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +15,14 @@ import java.util.List;
 public class JobService {
     @Autowired
     private JobRepository jobRepository;
+    @Autowired
+    private JobSummaryRepository jobSummaryRepository;
 
     public Job saveJob(Job job){
+        Job jobNew=jobRepository.save(job);
+        jobSummaryRepository.save(new JobSummary(jobNew));
 
-        return jobRepository.save(job);
+        return jobNew;
     }
     public List<Job> saveJobs(List<Job> jobs){
 

@@ -18,11 +18,18 @@ public class State {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int stateId;
 
-    @JsonManagedReference
+    //@JsonManagedReference
     //@JsonBackReference
+    /*
     @OneToMany(mappedBy = "state", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     private Collection<Job> jobs;
+    */
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "state", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    private Collection<JobSummary> jobSummaries;
 
     private String stateName;
     private int totalPopulation;

@@ -1,6 +1,7 @@
 package app.server.rguscdapp.entity;
 
 import java.util.Collection;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,7 +40,13 @@ public class District {
     private int sumPopulationRep;
     private boolean majMinDistrict;
 
-
+    //mappedBy = "district",
+    @ManyToMany
+    @JoinTable(
+            name = "course_like",
+            joinColumns = @JoinColumn(name = "district_id"),
+            inverseJoinColumns = @JoinColumn(name = "precinct_id"))
+    private List<Precinct> precincts;
 /*
 + getPercentBlackPopulation(): double
 + getPercentHispanicPopulation(): double

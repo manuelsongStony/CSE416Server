@@ -38,11 +38,14 @@ public class Job {
     @Transient
     private List<Districting> ctDistrictings;
 
-    @JsonBackReference
-    //@JsonManagedReference
+
+    //@JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "state_id", nullable = false)
     private State state;
+
+
+
 
     @Transient
     private Map<Summary, Collection<Districting>> summaryDistrictings;
@@ -67,6 +70,9 @@ public class Job {
     private Minority minority;
     @Transient
     private Districting averageDistricting;
+    @Transient
+    private Districting enactedDistricting;
+
     @Transient
     private ArrayList<double[]> boxAndWhiskerArray;
 
