@@ -13,6 +13,7 @@ import app.server.rguscdapp.enums.PopulationType;
 import app.server.rguscdapp.enums.Summary;
 import app.server.rguscdapp.sorting.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,8 +40,8 @@ public class Job {
     private List<Districting> ctDistrictings;
 
 
-    //@JsonBackReference
-
+    @JsonIgnore
+    //@JsonManagedReference
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "state_id", nullable = false)
     private State state;

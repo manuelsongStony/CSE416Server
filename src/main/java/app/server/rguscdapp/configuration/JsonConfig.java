@@ -42,7 +42,7 @@ public class JsonConfig {
         return args -> {
 
             //addGeorgiaPrecint();
-
+            //addJob();
 
         };
     }
@@ -62,6 +62,7 @@ public class JsonConfig {
 
         //add job
         Job job =new Job();
+        //job.setStateName(state.getStateName());
         job.setState(state);
         Collection<Districting> dtingsCollection=new ArrayList<>();
         jobRepository.save(job);//save job

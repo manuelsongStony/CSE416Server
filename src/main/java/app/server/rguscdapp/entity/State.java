@@ -1,6 +1,7 @@
 package app.server.rguscdapp.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,6 +31,13 @@ public class State {
     @OneToMany(mappedBy = "state", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     private Collection<JobSummary> jobSummaries;
+
+    //@JsonBackReference
+    @JsonIgnore
+    @OneToMany(mappedBy = "state", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    private Collection<Job> jobs;
+
 
     private String stateName;
     private int totalPopulation;
