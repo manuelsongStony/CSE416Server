@@ -42,21 +42,27 @@ public class JsonConfig {
         return args -> {
 
             //addGeorgiaPrecint();
-            //addJob();
+            //addJob("Georgia","/json/Georgia-5000.json");
+            //addJob("Texas","/json/test_texas2_100.json");
 
+
+            
+            //System.out.println(((District)(districtRepository.findById(1).orElse(null))).getPrecinctString());
+            //System.out.println(((District)(districtRepository.findById(1).orElse(null))).getPrecinctString());
+            //System.out.println(((jobRepository.findById(1).orElse(null))).getDistrictings());
         };
     }
 
 
-    public void addJob() throws IOException {
+    public void addJob(String nameOfState,String fileName) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
 
         //add state
         State state =new State();
-        state.setStateName("Georgia");
+        state.setStateName(nameOfState);
         stateRepository.save(state);
 
-        InputStream inputStream = TypeReference.class.getResourceAsStream("/json/Georgia-5000.json");
+        InputStream inputStream = TypeReference.class.getResourceAsStream(fileName);
         Map<String, Object> jsonJobMap = mapper.readValue(inputStream, Map.class);
 
 
@@ -75,7 +81,7 @@ public class JsonConfig {
             //add Districting
             Districting districting =new Districting();
             districting.setJob(job);
-            List<District> dtCollection=new ArrayList<>();
+            //List<District> dtCollection=new ArrayList<>();
             districtingRepository.save(districting);//save districting
 
             if(o instanceof Map) {
@@ -91,34 +97,48 @@ public class JsonConfig {
 
                     if (districtElement instanceof Map) {
                         Map<String,Object> districtMap = (Map<String,Object>) districtElement;
-                        district.setNumber((Integer)districtMap.get("districtNumber"));
+                        if(nameOfState.equals("Texas")){
+                            district.setNumber(Integer.parseInt((String)districtMap.get("districtNumber")));
+                        }else{
+                            district.setNumber((Integer)districtMap.get("districtNumber"));
+                        }
+
                         district.setVAP(((Integer)districtMap.get("VAP")== null)? 0:(Integer)districtMap.get("VAP") );
 
-                        district.setHVAP((Integer)districtMap.get("HVAP"));
-                        district.setWVAP((Integer)districtMap.get("WVAP"));
-                        district.setBVAP((Integer)districtMap.get("BVAP"));
-                        district.setAMINVAP((Integer)districtMap.get("AMINVAP"));
-                        district.setASIANVAP((Integer)districtMap.get("ASIANVAP"));
-                        district.setNHPIVAP((Integer)districtMap.get("NHPIVAP"));
+                        district.setHVAP(((Integer)districtMap.get("HVAP")== null)? 0:(Integer)districtMap.get("HVAP") );
+                        district.setWVAP(((Integer)districtMap.get("WVAP")== null)? 0:(Integer)districtMap.get("WVAP") );
+                        district.setBVAP(((Integer)districtMap.get("BVAP")== null)? 0:(Integer)districtMap.get("BVAP") );
+                        district.setAMINVAP(((Integer)districtMap.get("AMINVAP")== null)? 0:(Integer)districtMap.get("AMINVAP") );
+                        district.setASIANVAP(((Integer)districtMap.get("ASIANVAP")== null)? 0:(Integer)districtMap.get("ASIANVAP") );
+                        district.setNHPIVAP(((Integer)districtMap.get("NHPIVAP")== null)? 0:(Integer)districtMap.get("NHPIVAP") );
 
-                        //district.setNHPIVAP((Integer)districtMap.get("precincts"));
+
+
+
+                        if(nameOfState.equals("Texas")){
+                            Object pricintList = districtMap.get("precincts");
+                            district.setPrecinctString(pricintList.toString());
+                        }else{
+                            Object pricintList = districtMap.get("precincts");
+                            district.setPrecinctString(pricintList.toString());
+                        }
 
                         districtRepository.save(district);
                     }
 
-                    dtCollection.add(district);
+                    //dtCollection.add(district);
                 }
 
-                districting.setDistricts(dtCollection);
+                //districting.setDistricts(dtCollection);
                 //districtingRepository.save(districting);
 
             }
 
 
-            dtingsCollection.add(districting);
+            //dtingsCollection.add(districting);
 
         }
-        job.setDistrictings(dtingsCollection);
+        //job.setDistrictings(dtingsCollection);
         //jobRepository.save(job);//save job
 
     }

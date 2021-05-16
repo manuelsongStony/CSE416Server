@@ -57,6 +57,10 @@ public class District {
             joinColumns = @JoinColumn(name = "district_id"),
             inverseJoinColumns = @JoinColumn(name = "precinct_id"))
     private List<Precinct> precincts;
+
+    @Lob
+    @Column(name = "file", columnDefinition = "LONGBLOB")
+    private String precinctString;
 /*
 + getPercentBlackPopulation(): double
 + getPercentHispanicPopulation(): double
