@@ -3,6 +3,7 @@ package app.server.rguscdapp.entity;
 import java.util.Collection;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ public class District {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int districtId;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "districting_id", nullable = false)
     private Districting districting;
@@ -35,7 +37,15 @@ public class District {
     private int sumPopulationAsian;
     private int sumPopulationNative;
     private int sumCVAP;
-    private int sumVAP;
+
+    private int VAP;
+    private int WVAP;
+    private int BVAP;
+    private int HVAP;
+    private int AMINVAP;
+    private int ASIANVAP;
+    private int NHPIVAP;
+
     private int sumPopulationDem;
     private int sumPopulationRep;
     private boolean majMinDistrict;

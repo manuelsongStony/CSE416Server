@@ -3,6 +3,8 @@ package app.server.rguscdapp.entity;
 
 import app.server.rguscdapp.enums.Minority;
 import app.server.rguscdapp.sorting.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,10 +24,12 @@ public class Districting {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int districtingId;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "districting", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     private List<District> districts;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "job_id", nullable = false)
     private Job job;

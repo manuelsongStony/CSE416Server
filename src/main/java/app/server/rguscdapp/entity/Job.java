@@ -30,7 +30,7 @@ public class Job {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int jobId; // for database
 
-
+    @JsonManagedReference
     @OneToMany(mappedBy = "job", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     private Collection<Districting> districtings;
@@ -40,11 +40,12 @@ public class Job {
 
 
     //@JsonBackReference
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "state_id", nullable = false)
     private State state;
 
-
+    //private String stateName;
 
 
     @Transient
