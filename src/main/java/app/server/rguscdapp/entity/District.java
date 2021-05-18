@@ -53,7 +53,7 @@ public class District {
     //mappedBy = "district",
     @ManyToMany
     @JoinTable(
-            name = "course_like",
+            name = "dirstrict_precinct",
             joinColumns = @JoinColumn(name = "district_id"),
             inverseJoinColumns = @JoinColumn(name = "precinct_id"))
     private List<Precinct> precincts;

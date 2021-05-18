@@ -1,6 +1,8 @@
 package app.server.rguscdapp.service;
 
 import app.server.rguscdapp.entity.Districting;
+import app.server.rguscdapp.entity.Job;
+import app.server.rguscdapp.entity.JobSummary;
 import app.server.rguscdapp.repository.DistrictingRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,4 +35,21 @@ public class DistrictingService {
         return "districting remove!!"+id;
     }
 
+    public void updateDistricting(Districting d){
+        Districting existingDistricting=districtingRepository.findById(d.getDistrictingId()).orElse(null);
+
+        existingDistricting.setVAP(d.getVAP());
+        existingDistricting.setWVAP(d.getWVAP());
+        existingDistricting.setBVAP(d.getBVAP());
+        existingDistricting.setHVAP(d.getHVAP());
+        existingDistricting.setAMINVAP(d.getAMINVAP());
+        existingDistricting.setASIANVAP(d.getASIANVAP());
+        existingDistricting.setNHPIVAP(d.getNHPIVAP());
+
+
+        districtingRepository.save(existingDistricting);
+
+    }
+
 }
+

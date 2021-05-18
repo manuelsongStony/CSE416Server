@@ -29,14 +29,19 @@ public class Job {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private int jobId; // for database
+    private int jobId; // for databas
 
-    @JsonManagedReference
+    //private int filteredjobId; // for database
+
+    //@JsonManagedReference
+    @JsonIgnore
     @OneToMany(mappedBy = "job", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     private Collection<Districting> districtings;
 
-    @Transient
+    //@JsonManagedReference
+    @OneToMany( fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
     private List<Districting> ctDistrictings;
 
 
@@ -60,6 +65,8 @@ public class Job {
     private Collection<Incumbent> incumbents;
 
     private int numberOfDistricts;
+    private int numberOfFilteredDistricts;
+    private double mMMThreshold;
     private int minMajorityMinorityDistricts;
     private double mincompactness;
     private CompactnessType compactnessType;
@@ -83,8 +90,13 @@ public class Job {
 
         ctDistrictings=new ArrayList<>();
 
+
+
         for (Districting dis : districtings) {
+
+
             double compactness=0;
+
             switch(compactnessType) {
                 case GRAPHCOMPACTNESS:
                     compactness=dis.getCompactnessGraph();
@@ -97,6 +109,19 @@ public class Job {
                     break;
             }
 
+
+
+            List<District> dts=dis.getDistricts();
+            Collections.sort(dts,new PopNumber());
+            double equality=dts.get(dts.size()-1).getVAP()-dts.get(0).getVAP();
+            equality=equality/(dis.getVAP()/dts.size());
+            dis.setPopEqualityDifference(equality);
+
+            if(dis.getPopEqualityDifference()<=popConstraint) {
+                ctDistrictings.add(dis);
+            }
+            //System.out.println(ctDistrictings);
+            /*
             if(dis.getNumMajMinDistricts()>=minMajorityMinorityDistricts){
                 if(dis.getPopEqualityDifference()>=popConstraint){
                     if(compactness>=mincompactness){
@@ -106,7 +131,7 @@ public class Job {
                     }
                 }
             }
-
+            */
 
         }
 

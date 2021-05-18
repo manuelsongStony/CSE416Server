@@ -4,6 +4,7 @@ package app.server.rguscdapp.entity;
 import app.server.rguscdapp.enums.Minority;
 import app.server.rguscdapp.sorting.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,10 +30,15 @@ public class Districting {
             cascade = CascadeType.ALL)
     private List<District> districts;
 
-    @JsonBackReference
+    @JsonIgnore
+    //@JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "job_id", nullable = false)
     private Job job;
+
+
+
+
 
     private String geoData;//path of geojson file
     private double objectiveScore;
@@ -45,6 +51,13 @@ public class Districting {
     private double splitCountyScore;
     private double efficiencyGap;
 
+    private int VAP;
+    private int WVAP;
+    private int BVAP;
+    private int HVAP;
+    private int AMINVAP;
+    private int ASIANVAP;
+    private int NHPIVAP;
 
     @Transient
     private ArrayList<Double> boxAndWhiskerData;

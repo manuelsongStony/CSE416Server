@@ -44,8 +44,11 @@ public class JobService {
 
     public Job updateJob(Job job){
         Job existingJob=jobRepository.findById(job.getJobId()).orElse(null);
+
         existingJob.setMinority(job.getMinority());
         existingJob.setMinMajorityMinorityDistricts(job.getMinMajorityMinorityDistricts());
+        existingJob.setMMMThreshold(job.getMMMThreshold());
+
 
         existingJob.setCompactnessType(job.getCompactnessType());
         existingJob.setMincompactness(job.getMincompactness());
@@ -57,7 +60,14 @@ public class JobService {
 
         existingJob.applyConstraints();
 
+
+        //jobsummary
+        jobSummaryRepository.deleteById(job.getJobId());
+        jobSummaryRepository.save(new JobSummary(existingJob));
+        //jobsummary
+
         return jobRepository.save(existingJob);
+
     }
 
 

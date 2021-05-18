@@ -1,7 +1,12 @@
 package app.server.rguscdapp.configuration;
 
 import app.server.rguscdapp.entity.*;
+import app.server.rguscdapp.enums.Summary;
 import app.server.rguscdapp.repository.*;
+import app.server.rguscdapp.service.DistrictingService;
+import app.server.rguscdapp.service.JobService;
+import app.server.rguscdapp.sorting.PopNumber;
+import app.server.rguscdapp.sorting.SortByObjectiveScore;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.JSONPObject;
@@ -18,10 +23,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Configuration
@@ -37,16 +39,21 @@ public class JsonConfig {
     @Autowired
     private DistrictRepository districtRepository;
 
+    @Autowired
+    private JobService jobService;
+
+    @Autowired
+    private DistrictingService districtingService;
     @Bean
     CommandLineRunner commandLineRunner(){
         return args -> {
 
             //addGeorgiaPrecint();
-            //addJob("Georgia","/json/Georgia-5000.json");
-            //addJob("Texas","/json/test_texas2_100.json");
+            addJob("Georgia","/json/Georgia-5000.json");
+            addJob("Texas","/json/test_texas2_100.json");
 
 
-            
+
             //System.out.println(((District)(districtRepository.findById(1).orElse(null))).getPrecinctString());
             //System.out.println(((District)(districtRepository.findById(1).orElse(null))).getPrecinctString());
             //System.out.println(((jobRepository.findById(1).orElse(null))).getDistrictings());
@@ -70,8 +77,10 @@ public class JsonConfig {
         Job job =new Job();
         //job.setStateName(state.getStateName());
         job.setState(state);
-        Collection<Districting> dtingsCollection=new ArrayList<>();
-        jobRepository.save(job);//save job
+        //Collection<Districting> dtingsCollection=new ArrayList<>();
+
+        jobService.saveJob(job);
+        //jobRepository.save(job);//save job
 
 
 
@@ -83,6 +92,14 @@ public class JsonConfig {
             districting.setJob(job);
             //List<District> dtCollection=new ArrayList<>();
             districtingRepository.save(districting);//save districting
+
+            int districtingVAP=0;
+            int districtingWVAP=0;
+            int districtingBVAP=0;
+            int districtingHVAP=0;
+            int districtingAMINVAP=0;
+            int districtingASIANVAP=0;
+            int districtingNHPIVAP=0;
 
             if(o instanceof Map) {
 
@@ -102,17 +119,45 @@ public class JsonConfig {
                         }else{
                             district.setNumber((Integer)districtMap.get("districtNumber"));
                         }
+                        int vap=((Integer)districtMap.get("VAP")== null)? 0:(Integer)districtMap.get("VAP");
+                        districtingVAP+=vap;
+                        district.setVAP(vap);
 
-                        district.setVAP(((Integer)districtMap.get("VAP")== null)? 0:(Integer)districtMap.get("VAP") );
+                        int hvap=((Integer)districtMap.get("HVAP")== null)? 0:(Integer)districtMap.get("HVAP");
+                        districtingHVAP+=hvap;
+                        district.setHVAP(hvap);
 
-                        district.setHVAP(((Integer)districtMap.get("HVAP")== null)? 0:(Integer)districtMap.get("HVAP") );
-                        district.setWVAP(((Integer)districtMap.get("WVAP")== null)? 0:(Integer)districtMap.get("WVAP") );
-                        district.setBVAP(((Integer)districtMap.get("BVAP")== null)? 0:(Integer)districtMap.get("BVAP") );
+
+                        int wvap=((Integer)districtMap.get("WVAP")== null)? 0:(Integer)districtMap.get("WVAP");
+                        districtingWVAP+=wvap;
+                        district.setWVAP(wvap);
+
+
+                        int bvap=((Integer)districtMap.get("BVAP")== null)? 0:(Integer)districtMap.get("BVAP");
+                        districtingBVAP+=bvap;
+                        district.setBVAP(bvap);
+
                         district.setAMINVAP(((Integer)districtMap.get("AMINVAP")== null)? 0:(Integer)districtMap.get("AMINVAP") );
-                        district.setASIANVAP(((Integer)districtMap.get("ASIANVAP")== null)? 0:(Integer)districtMap.get("ASIANVAP") );
-                        district.setNHPIVAP(((Integer)districtMap.get("NHPIVAP")== null)? 0:(Integer)districtMap.get("NHPIVAP") );
+                        int aminvap=((Integer)districtMap.get("AMINVAP")== null)? 0:(Integer)districtMap.get("AMINVAP");
+                        districtingAMINVAP+=aminvap;
+                        district.setAMINVAP(aminvap);
 
 
+                        int asianvap=((Integer)districtMap.get("ASIANVAP")== null)? 0:(Integer)districtMap.get("ASIANVAP");
+                        districtingASIANVAP+=asianvap;
+                        district.setASIANVAP(asianvap);
+
+
+                        int nhpivap=((Integer)districtMap.get("NHPIVAP")== null)? 0:(Integer)districtMap.get("NHPIVAP");
+                        districtingNHPIVAP+=nhpivap;
+                        district.setNHPIVAP(nhpivap);
+
+
+
+                        if(vap==0){
+                            vap=hvap+wvap+bvap+aminvap+asianvap+nhpivap;
+                            district.setVAP(vap);
+                        }
 
 
                         if(nameOfState.equals("Texas")){
@@ -130,12 +175,39 @@ public class JsonConfig {
                 }
 
                 //districting.setDistricts(dtCollection);
-                //districtingRepository.save(districting);
+
+
 
             }
 
+            districting.setVAP(districtingVAP);
+            if(districtingVAP==0){
+                districting.setVAP(districtingWVAP+districtingBVAP+districtingHVAP+districtingAMINVAP+districtingNHPIVAP);
+            }
+            districtingRepository.save(districting);
+            /*
+            districting.setWVAP(districtingWVAP);
+            districting.setBVAP(districtingBVAP);
+            districting.setHVAP(districtingHVAP);
+            districting.setAMINVAP(districtingAMINVAP);
+            districting.setASIANVAP(districtingASIANVAP);
+            districting.setNHPIVAP(districtingNHPIVAP);
+
+
+            districtingRepository.save(districting);
+            */
 
             //dtingsCollection.add(districting);
+
+            /*
+            System.out.println(districting.getDistricts());
+            ArrayList<District> dts=(ArrayList<District>)(districting.getDistricts());
+            Collections.sort(dts,new PopNumber());
+            double equality=dts.get(dts.size()-1).getVAP()-dts.get(0).getVAP();
+            equality=equality/(districting.getVAP()/dts.size());
+            districting.setPopEqualityDifference(equality);
+            districtingRepository.save(districting);
+            */
 
         }
         //job.setDistrictings(dtingsCollection);
@@ -201,4 +273,6 @@ public class JsonConfig {
     public void addTexasPrecint(){
 
     }
+
+
 }
